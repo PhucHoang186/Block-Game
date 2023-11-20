@@ -11,9 +11,6 @@ public class EndPoint : MonoBehaviour
         if (collider.CompareTag("Player"))
         {
             vfx.SetActive(true);
-            var player = collider.GetComponent<PlayerCharacter>();
-            if (player != null)
-                player.Celebrate();
         }
     }
 }

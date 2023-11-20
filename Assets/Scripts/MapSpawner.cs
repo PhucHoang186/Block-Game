@@ -34,6 +34,7 @@ public class MapSpawner : MonoBehaviour
         Node startNode = GridManager.Instance.GetNodeByPosition(startPoint.position);
         Node endNode = GridManager.Instance.GetNodeByPosition(endPoint.position);
         PathFinding.Instance.FindPath(startNode, endNode);
+        GameManager.Instance.MapSpawner = this;
         // spawn map
         var path = GridManager.Instance.path;
         var grids = GridManager.Instance.Grids;
@@ -64,8 +65,11 @@ public class MapSpawner : MonoBehaviour
         Player = Instantiate(playerPrefab, transform);
         Player.transform.position = startPoint.position;
         Player.CurrentNodeOn = GridManager.Instance.GetNodeByPosition(startPoint.position);
+        
         var endFlagObj = Instantiate(flagPrefab, transform);
         endFlagObj.transform.position = endPoint.position;
+        var endNode = GridManager.Instance.GetNodeByPosition(endPoint.position);
+        endNode.IsEndNode = true;
     }
 
     public GameObject GetRandomPrefab(List<GameObject> randomPrefabList)

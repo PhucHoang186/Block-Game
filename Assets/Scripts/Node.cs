@@ -18,4 +18,5 @@ public class Node : MonoBehaviour
     public int X { get; set; }
     public int Y { get; set; }
     public bool IsPlaced { get; set; }
+    public bool IsEndNode { get; set; }
 }

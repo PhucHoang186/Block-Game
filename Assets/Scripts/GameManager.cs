@@ -9,7 +9,6 @@ public enum GameState
     Play,
     Win,
     Lose,
-    Replay
 }
 
 public class GameManager : MonoBehaviour
@@ -17,6 +16,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] LevelConfig levelConfig;
     public static GameManager Instance;
     public GameState gameState;
+    private bool isWinGame;
+    private bool isLoseGame;
+    public MapSpawner MapSpawner { get; set; }
 
     private void Awake()
     {
@@ -44,9 +46,6 @@ public class GameManager : MonoBehaviour
             case GameState.Win:
                 OnWinGame();
                 break;
-            case GameState.Replay:
-                OnReplayGame();
-                break;
             case GameState.Lose:
                 OnLoseGame();
                 break;
@@ -55,6 +54,8 @@ public class GameManager : MonoBehaviour
 
     private void OnStartGame()
     {
+        SetWinGame(false);
+        SetLoseGame(false);
         LoadSceneManager.Instance.LoadSceneAsync(levelConfig.GetCurrentLevel().levelScene, () =>
         {
             TransitionManager.Instance.OnCallTransitionIn(false);
@@ -63,19 +64,27 @@ public class GameManager : MonoBehaviour
         });
     }
 
-    //they are the same for now
     private void OnWinGame()
     {
-        LoadNextScene();
+        StartCoroutine(CorOnWinGame());
     }
 
-    private void OnReplayGame()
+    private IEnumerator CorOnWinGame()
     {
-        LoadCurrentScene();
+        MapSpawner.Player.Celebrate();
+        yield return new WaitForSeconds(2f); // wait for win animation
+        LoadNextScene();
     }
 
     private void OnLoseGame()
     {
+        StartCoroutine(CorOnLoseGame());
+    }
+
+    private IEnumerator CorOnLoseGame()
+    {
+        MapSpawner.Player.OnLoseGame();
+        yield return new WaitForSeconds(2f); // wait for win animation
         LoadCurrentScene();
     }
 
@@ -136,6 +145,34 @@ public class GameManager : MonoBehaviour
         TransitionManager.Instance.OnCallTransitionIn(true);
         yield return new WaitForSeconds(1f);
         LoadSceneManager.Instance.LoadScene(SceneName.MAIN_MENU);
+    }
 
+    public void SetWinGame(bool condition)
+    {
+        isWinGame = condition;
+    }
+
+    public void SetLoseGame(bool condition)
+    {
+        isLoseGame = condition;
+    }
+
+    public void CheckLoseCondition()
+    {
+        if (!isLoseGame)
+            return;
+        OnChangeState(GameState.Lose);
+    }
+
+    public void CheckWinCondition()
+    {
+        if (isWinGame)
+        {
+            OnChangeState(GameState.Win);
+        }
+        else
+        {
+            OnChangeState(GameState.Lose);
+        }
     }
 }

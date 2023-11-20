@@ -10,10 +10,12 @@ public class CommandStacker : MonoBehaviour
     Queue<IAction> commands = new();
     List<ActionInfo> commandInfos = new();
     private Action onExecuteOneCommand;
+    private Action onExecuteAllCommands;
 
-    public void InitAction(Action onExecuteOneCommand)
+    public void InitAction(Action onExecuteOneCommand, Action onExecuteAllCommands)
     {
         this.onExecuteOneCommand = onExecuteOneCommand;
+        this.onExecuteAllCommands = onExecuteAllCommands;
     }
 
     public void ExecuteCommands()
@@ -32,10 +34,10 @@ public class CommandStacker : MonoBehaviour
         {
             IAction command = commands.Dequeue();
             command.ExecuteAction(player);
-            onExecuteOneCommand?.Invoke();
             yield return new WaitForSeconds(executeDelayTime);
-
+            onExecuteOneCommand?.Invoke();
         }
+        onExecuteAllCommands?.Invoke();
     }
 
     public void ResetCommands()

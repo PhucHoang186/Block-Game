@@ -143,11 +143,13 @@ public class CommandHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void BlockInteract()
     {
+        ToggleCommandButtons(false);
         ToggleBlockInput(true);
     }
 
     public void UnBlockInteract()
     {
+        ToggleCommandButtons(true);
         ToggleBlockInput(false);
     }
 

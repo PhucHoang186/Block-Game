@@ -28,7 +28,7 @@ public class LevelSelectUIManager : MonoBehaviour
         {
             var levelButton = Instantiate(levelButtonPrefab, content);
             levelButton.InitAction(LoadLevelScene);
-            levelButton.Init(i, i > levelConfig.maxLevel);
+            levelButton.Init(i + 1, i > levelConfig.maxLevel);
             levelButtons.Add(levelButton);
         }
     }

@@ -20,8 +20,7 @@ public enum AnimationName
 public enum PlayerState
 {
     Movement,
-    Celebrate,
-    Lose
+    UnMoveable,
 }
 
 public enum LoseType
@@ -45,6 +44,7 @@ public class PlayerCharacter : MonoBehaviour
     private bool reachDesMove;
     private bool reachDesAngle;
     private bool isLoseGame;
+    private bool isWinGame;
     private int currentFacingDirection; // 0 is front, 1 is right, 2 is back 3 is left
     public Node CurrentNodeOn { get; set; }
 
@@ -55,18 +55,27 @@ public class PlayerCharacter : MonoBehaviour
 
     public void StartMove(Vector3 direction)
     {
-        if (playerState != PlayerState.Movement)
+        if (!CheckMoveableState())
             return;
 
         // this one here is a mess
         reachDesMove = false;
         moveDirection = direction;
+
         var nextNode = GetNextNode(direction);
         if (nextNode != null)
         {
-            if (!nextNode.IsPlaced)
+            if (nextNode.IsPlaced)
             {
-
+                // call endgame
+                // hit node
+                isLoseGame = true;
+                PlayAnim(AnimationName.Move);
+                loseType = LoseType.MoveToWrongNode;
+                desPoint = CalculateDesPointOnLose(nextNode.transform.position, direction);
+            }
+            else
+            {
                 CurrentNodeOn = nextNode;
                 desPoint = CurrentNodeOn.transform.position;
                 isLoseGame = CheckIfMoveDirectionMatchFacingDirection();
@@ -81,15 +90,8 @@ public class PlayerCharacter : MonoBehaviour
                     PlayAnim(AnimationName.Move);
                 }
             }
-            else
-            {
-                // call endgame
-                // hit to node
-                isLoseGame = true;
-                PlayAnim(AnimationName.Move);
-                loseType = LoseType.MoveToWrongNode;
-                desPoint = CalculateDesPointOnLose(nextNode.transform.position, direction);
-            }
+
+            isWinGame = nextNode.IsEndNode;
         }
         else
         {
@@ -131,16 +133,24 @@ public class PlayerCharacter : MonoBehaviour
 
     private void ReachDesMove()
     {
+        // check win lose condition
         reachDesMove = true;
+        if (isWinGame)
+        {
+            GameManager.Instance.SetWinGame(true);
+        }
+
         if (isLoseGame)
         {
+            playerState = PlayerState.UnMoveable;
+            GameManager.Instance.SetLoseGame(true);
+            GameManager.Instance.SetWinGame(false);
             PlayLoseAnimation();
-            OnLoseGame();
+            return;
         }
-        else
-        {
-            PlayAnim(AnimationName.Idle);
-        }
+
+        // no thing happen
+        PlayAnim(AnimationName.Idle);
     }
 
     private void ReachDesAngle()
@@ -151,7 +161,7 @@ public class PlayerCharacter : MonoBehaviour
 
     public void StartRotate(float angle)
     {
-        if (playerState != PlayerState.Movement)
+        if (!CheckMoveableState())
             return;
 
         reachDesAngle = false;
@@ -190,7 +200,7 @@ public class PlayerCharacter : MonoBehaviour
 
     private void Update()
     {
-        if (playerState != PlayerState.Movement)
+        if (!CheckMoveableState())
             return;
         Move();
         Rotate();
@@ -210,37 +220,23 @@ public class PlayerCharacter : MonoBehaviour
 
     public void Celebrate()
     {
-        playerState = PlayerState.Celebrate;
-        transform.DORotate(new Vector3(0f, 180f, 0f), 1f).OnComplete(() =>
-        {
-            PlayCelebrateAnimation();
-        });
+        transform.DORotate(new Vector3(0f, 180f, 0f), 1f).OnComplete(PlayCelebrateAnimation);
     }
 
     private void PlayCelebrateAnimation()
     {
-        StartCoroutine(CorPlayCelebrateAnimation());
-    }
-
-    private IEnumerator CorPlayCelebrateAnimation()
-    {
         PlayAnim(AnimationName.Celebrate);
-        yield return new WaitForSeconds(2f);
-        GameManager.Instance.OnChangeState(GameState.Win);
     }
 
-    private void OnLoseGame()
+    public void OnLoseGame()
     {
         StartCoroutine(CorOnLoseGame());
     }
 
     private IEnumerator CorOnLoseGame()
     {
-        playerState = PlayerState.Lose;
         yield return new WaitForSeconds(0.5f);
         loseIcon.SetActive(true);
-        yield return new WaitForSeconds(2f);
-        GameManager.Instance.OnChangeState(GameState.Lose);
     }
 
     private void PlayLoseAnimation()
@@ -255,6 +251,11 @@ public class PlayerCharacter : MonoBehaviour
             case LoseType.MoveToEdge:
                 break;
         }
+    }
+
+    public bool CheckMoveableState()
+    {
+        return playerState == PlayerState.Movement;
     }
 }
 [Serializable]

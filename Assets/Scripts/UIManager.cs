@@ -24,9 +24,9 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        commandHolder.InitActions(OnMouseEnterCommandStack, onMouseExitCommandStack, UpdateACtionInfo);
+        commandHolder.InitActions(OnMouseEnterCommandStack, OnMouseExitCommandStack, UpdateACtionInfo);
         actionUIMover.InitAction(OnMouseRelease);
-        commandStacker.InitAction(OnExecuteOneCommand);
+        commandStacker.InitAction(OnExecuteOneCommand, OnExecuteAllCommands);
         ActionButton.onMouseDownCb += ClickedOnActionButton;
     }
 
@@ -44,7 +44,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void onMouseExitCommandStack()
+    private void OnMouseExitCommandStack()
     {
         isInRange = false;
         commandHolder.TogglePlaceHolderIcon(false);
@@ -70,6 +70,12 @@ public class UIManager : MonoBehaviour
     private void OnExecuteOneCommand()
     {
         commandHolder.UpdateCommandExecuteIcon();
+        GameManager.Instance.CheckLoseCondition();
+    }
+    
+    private void OnExecuteAllCommands()
+    {
+        GameManager.Instance.CheckWinCondition();
     }
 
     public void ResetCommands()
