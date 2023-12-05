@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] ActionUIMover actionUIMover;
     [SerializeField] CommandHolder commandHolder;
     [SerializeField] CommandListDisplay commandList;
+    [SerializeField] Transform handtutorial;
     ActionData currentAction;
     private bool isInRange;
 
@@ -33,6 +34,11 @@ public class UIManager : MonoBehaviour
     void OnDestroy()
     {
         ActionButton.onMouseDownCb -= ClickedOnActionButton;
+    }
+
+    private void Update()
+    {
+        handtutorial.position = Input.mousePosition;
     }
 
     private void OnMouseEnterCommandStack()
