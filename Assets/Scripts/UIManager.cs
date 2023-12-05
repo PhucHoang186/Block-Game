@@ -105,8 +105,6 @@ public class UIManager : MonoBehaviour
     {
         GameManager.Instance.LoadLevelSelectScene();
     }
-
-
 }
 
 [Serializable]

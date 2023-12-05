@@ -6,7 +6,8 @@ using UnityEngine;
 public enum GameState
 {
     None,
-    Play,
+    LoadLevel,
+    StartGame,
     Win,
     Lose,
 }
@@ -14,11 +15,12 @@ public enum GameState
 public class GameManager : MonoBehaviour
 {
     [SerializeField] LevelConfig levelConfig;
+
     public static GameManager Instance;
     public GameState gameState;
     private bool isWinGame;
     private bool isLoseGame;
-    public MapSpawner MapSpawner { get; set; }
+    public EnvironmentManager EnvManager { get; set; }
 
     private void Awake()
     {
@@ -30,7 +32,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        OnChangeState(GameState.Play);
+        OnChangeState(GameState.LoadLevel);
     }
 
     public void OnChangeState(GameState newState)
@@ -40,7 +42,10 @@ public class GameManager : MonoBehaviour
         gameState = newState;
         switch (gameState)
         {
-            case GameState.Play:
+            case GameState.LoadLevel:
+                OnLoadLevel();
+                break;
+            case GameState.StartGame:
                 OnStartGame();
                 break;
             case GameState.Win:
@@ -52,16 +57,35 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void OnStartGame()
+    public PlayerCharacter GetPlayerInLevel()
+    {
+        return EnvManager.mapSpawner.Player;
+    }
+
+
+    public void CheckShowTutorial()
+    {
+        if (EnvManager.levelType == LevelType.Tutorial)
+        {
+            // show tutorial
+        }
+    }
+
+    private void OnLoadLevel()
     {
         SetWinGame(false);
         SetLoseGame(false);
         LoadSceneManager.Instance.LoadSceneAsync(levelConfig.GetCurrentLevel().levelScene, () =>
         {
             TransitionManager.Instance.OnCallTransitionIn(false);
-            UIManager.Instance.ResetCommands();
-            OnChangeState(GameState.Play);
+            OnChangeState(GameState.StartGame);
         });
+    }
+
+    private void OnStartGame()
+    {
+        UIManager.Instance.ResetCommands();
+        CheckShowTutorial();
     }
 
     private void OnWinGame()
@@ -71,7 +95,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator CorOnWinGame()
     {
-        MapSpawner.Player.Celebrate();
+        GetPlayerInLevel().Celebrate();
         yield return new WaitForSeconds(2f); // wait for win animation
         LoadNextScene();
     }
@@ -83,7 +107,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator CorOnLoseGame()
     {
-        MapSpawner.Player.OnLoseGame();
+        GetPlayerInLevel().OnLoseGame();
         yield return new WaitForSeconds(2f); // wait for win animation
         LoadCurrentScene();
     }
@@ -105,7 +129,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            OnChangeState(GameState.Play);
+            OnChangeState(GameState.LoadLevel);
         }
     }
 
@@ -119,7 +143,7 @@ public class GameManager : MonoBehaviour
         TransitionManager.Instance.OnCallTransitionIn(true);
         yield return new WaitForSeconds(1f);
         LoadSceneManager.Instance.UnLoadSceneAsync(levelConfig.GetCurrentLevel().levelScene);
-        OnChangeState(GameState.Play);
+        OnChangeState(GameState.LoadLevel);
     }
 
     public void LoadMainMenuScene()

@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: LevelConfig
   m_EditorClassIdentifier: 
   levelDatas:
+  - levelScene: Level0_Tutorial
   - levelScene: Level1
   - levelScene: Level2
   - levelScene: Level3
   currentLevel: 0
-  maxLevel: 2
+  maxLevel: 0

@@ -29,7 +29,7 @@ public class CommandStacker : MonoBehaviour
         if (commands.Count == 0)
             yield break;
 
-        var player = EnvironmentManager.Instance.mapSpawner.Player.gameObject;
+        var player = GameManager.Instance.GetPlayerInLevel().gameObject;
         while (commands.Count > 0)
         {
             IAction command = commands.Dequeue();

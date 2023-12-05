@@ -34,7 +34,6 @@ public class MapSpawner : MonoBehaviour
         Node startNode = GridManager.Instance.GetNodeByPosition(startPoint.position);
         Node endNode = GridManager.Instance.GetNodeByPosition(endPoint.position);
         PathFinding.Instance.FindPath(startNode, endNode);
-        GameManager.Instance.MapSpawner = this;
         // spawn map
         var path = GridManager.Instance.path;
         var grids = GridManager.Instance.Grids;
