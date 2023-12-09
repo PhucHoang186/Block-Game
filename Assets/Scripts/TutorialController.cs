@@ -22,28 +22,26 @@ public enum CamType
 
 public class TutorialController : MonoBehaviour
 {
+    public static TutorialController Instance;
     public const float CAMERA_TRANSITON_TIME = 1f;
     [Header("Reference Use For Tutorials")]
     [SerializeField] CinemachineVirtualCamera normalCam;
     [SerializeField] CinemachineVirtualCamera playerFocusCam;
     [SerializeField] CinemachineVirtualCamera objecttiveFocusCam;
-    private TutorialStep tutorialStep;
 
-    void Start()
+    void Awake()
     {
-        OnChangeTutorialState(TutorialStep.Show_Objective);
+        if(Instance == null)
+            Instance = this;
     }
 
-    [Button]
-    public void Test()
+    void OnDestroy()
     {
-        OnChangeTutorialState(TutorialStep.Show_Objective);
+        Instance = null;
     }
-
 
     public void OnChangeTutorialState(TutorialStep tutorialStep)
     {
-        this.tutorialStep = tutorialStep;
         switch (tutorialStep)
         {
             case TutorialStep.Show_Objective:

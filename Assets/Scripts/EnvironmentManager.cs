@@ -13,8 +13,6 @@ public class EnvironmentManager : MonoBehaviour
 {
     public MapSpawner mapSpawner;
     public LevelType levelType;
-    [ShowIf("levelType", LevelType.Tutorial)]
-    public TutorialStepStore tutorialStepStore;
 
     void Start()
     {

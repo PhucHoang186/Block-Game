@@ -72,6 +72,7 @@ public class GameManager : MonoBehaviour
         if (EnvManager.levelType == LevelType.Tutorial)
         {
             // show tutorial
+            TutorialController.Instance.OnChangeTutorialState(TutorialStep.Show_Objective);
         }
     }
 

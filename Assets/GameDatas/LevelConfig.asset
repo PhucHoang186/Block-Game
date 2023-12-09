@@ -18,4 +18,4 @@ MonoBehaviour:
   - levelScene: Level2
   - levelScene: Level3
   currentLevel: 0
-  maxLevel: 0
+  maxLevel: 2
