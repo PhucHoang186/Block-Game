@@ -7,11 +7,12 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
+    [SerializeField] GameObject mainUI;
     [SerializeField] CommandStacker commandStacker;
     [SerializeField] ActionUIMover actionUIMover;
     [SerializeField] CommandHolder commandHolder;
     [SerializeField] CommandListDisplay commandList;
-    [SerializeField] Transform handtutorial;
+    [SerializeField] TutorialVideoPanel tutorialPanel;
     ActionData currentAction;
     private bool isInRange;
 
@@ -36,10 +37,6 @@ public class UIManager : MonoBehaviour
         ActionButton.onMouseDownCb -= ClickedOnActionButton;
     }
 
-    private void Update()
-    {
-        handtutorial.position = Input.mousePosition;
-    }
 
     private void OnMouseEnterCommandStack()
     {
@@ -67,6 +64,22 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void ToggleMainUI(bool isActive)
+    {
+        mainUI.SetActive(isActive);
+    }
+
+    public void ShowDialogText(string content)
+    {
+        ToggleMainUI(false);
+        tutorialPanel.ToggleDialogText(true, content);
+    }
+
+    public void HideDialogText()
+    {
+        ToggleMainUI(true);
+        tutorialPanel.ToggleDialogText(false);
+    }
 
     private void UpdateACtionInfo(int index, int actionCount)
     {
@@ -78,7 +91,7 @@ public class UIManager : MonoBehaviour
         commandHolder.UpdateCommandExecuteIcon();
         GameManager.Instance.CheckLoseCondition();
     }
-    
+
     private void OnExecuteAllCommands()
     {
         GameManager.Instance.CheckWinCondition();
@@ -110,6 +123,11 @@ public class UIManager : MonoBehaviour
     public void OnBackButtonPress()
     {
         GameManager.Instance.LoadLevelSelectScene();
+    }
+
+    public void OnShowTutorialButtonPress()
+    {
+        tutorialPanel.ToggleVideoTutorial(true);
     }
 }
 

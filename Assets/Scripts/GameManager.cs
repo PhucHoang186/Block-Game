@@ -62,6 +62,10 @@ public class GameManager : MonoBehaviour
         return EnvManager.mapSpawner.Player;
     }
 
+    public GameObject GetObjectiveInLevel()
+    {
+        return EnvManager.mapSpawner.Objective;
+    }
 
     public void CheckShowTutorial()
     {
@@ -168,7 +172,7 @@ public class GameManager : MonoBehaviour
     {
         TransitionManager.Instance.OnCallTransitionIn(true);
         yield return new WaitForSeconds(1f);
-        LoadSceneManager.Instance.LoadScene(SceneName.MAIN_MENU);
+        LoadSceneManager.Instance.LoadScene(SceneName.LEVEL_SELECT);
     }
 
     public void SetWinGame(bool condition)

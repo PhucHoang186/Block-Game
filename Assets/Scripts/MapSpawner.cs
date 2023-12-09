@@ -15,6 +15,7 @@ public class MapSpawner : MonoBehaviour
     [SerializeField] Transform endPoint;
 
     public PlayerCharacter Player {get; set;}
+    public GameObject Objective {get; set;}
 
     private void Start()
     {
@@ -68,6 +69,7 @@ public class MapSpawner : MonoBehaviour
         var endFlagObj = Instantiate(flagPrefab, transform);
         endFlagObj.transform.position = endPoint.position;
         var endNode = GridManager.Instance.GetNodeByPosition(endPoint.position);
+        Objective = endFlagObj;
         endNode.IsEndNode = true;
     }
 
