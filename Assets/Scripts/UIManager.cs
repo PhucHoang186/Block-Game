@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -12,9 +13,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] ActionUIMover actionUIMover;
     [SerializeField] CommandHolder commandHolder;
     [SerializeField] CommandListDisplay commandList;
-    [SerializeField] TutorialVideoPanel tutorialPanel;
+    [SerializeField] TutorialPanel tutorialPanel;
+    [SerializeField] GameObject blockInput;
     ActionData currentAction;
     private bool isInRange;
+    public bool IsBlockInput => blockInput.activeSelf;
 
     void Awake()
     {
@@ -37,6 +40,10 @@ public class UIManager : MonoBehaviour
         ActionButton.onMouseDownCb -= ClickedOnActionButton;
     }
 
+    public void OnBlockInput(bool isActive)
+    {
+        blockInput.SetActive(isActive);
+    }
 
     private void OnMouseEnterCommandStack()
     {
@@ -69,6 +76,17 @@ public class UIManager : MonoBehaviour
         mainUI.SetActive(isActive);
     }
 
+
+    public void OnShowHandDragAction(ActionType actionType)
+    {
+        tutorialPanel.ShowHandTutorialDragAction(commandList.GetCommandButtonPosition(actionType), commandHolder.GetTutorialCommandPosition(), commandList.GetActionButtonImage(actionType));
+    }
+
+    public void OnShowHandTapDemoButton()
+    {
+        tutorialPanel.ShowHandTapTutorialAction();
+    }
+
     public void ShowDialogText(string content)
     {
         ToggleMainUI(false);
@@ -86,6 +104,11 @@ public class UIManager : MonoBehaviour
         commandStacker.UpdateActionInfo(index, actionCount);
     }
 
+    public void ShowIntroPanel()
+    {
+        tutorialPanel.ToggleIntroPanel(true);
+    }
+
     private void OnExecuteOneCommand()
     {
         commandHolder.UpdateCommandExecuteIcon();
@@ -100,16 +123,14 @@ public class UIManager : MonoBehaviour
     public void ResetCommands()
     {
         commandList.EnableCommandList();
-        commandHolder.ResetCommands();
-        commandHolder.UnBlockInteract();
+        commandHolder.ResetCommand();
         commandStacker.ResetCommands();
     }
 
     public void RunCommands()
     {
         commandList.DisableCommandList();
-        commandHolder.ResetExecuteList();
-        commandHolder.BlockInteract();
+        commandHolder.RunCommand();
         commandStacker.ExecuteCommands();
     }
 
@@ -118,6 +139,12 @@ public class UIManager : MonoBehaviour
         currentAction = actionData;
         actionUIMover.OnStartMoving(actionData.actionIcon);
         commandHolder.UpdateIcon(currentAction.actionIcon);
+    }
+
+    public void ShowRotateButtonTutorial()
+    {
+        tutorialPanel.ToggleButtonTutorial(true);
+        DOVirtual.DelayedCall(1.5f, OnShowHandTapDemoButton);
     }
 
     public void OnBackButtonPress()

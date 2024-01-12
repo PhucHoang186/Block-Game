@@ -35,7 +35,7 @@ public class PlayerCharacter : MonoBehaviour
     [SerializeField] float moveSpeed;
     [SerializeField] float rotateSpeed;
     [SerializeField] GameObject loseIcon;
-    Animator anim;
+    private Animator anim;
     private PlayerState playerState;
     private Vector3 moveDirection;
     private Vector3 desAngle;
@@ -235,6 +235,8 @@ public class PlayerCharacter : MonoBehaviour
 
     private IEnumerator CorOnLoseGame()
     {
+        if(loseIcon == null)
+            yield break;
         yield return new WaitForSeconds(0.5f);
         loseIcon.SetActive(true);
     }
@@ -251,6 +253,11 @@ public class PlayerCharacter : MonoBehaviour
             case LoseType.MoveToEdge:
                 break;
         }
+    }
+
+    public void ShowPlayerIntro()
+    {
+        anim.CrossFade("Intro", 0f);
     }
 
     public bool CheckMoveableState()

@@ -6,7 +6,8 @@ using UnityEngine;
 public enum LevelType
 {
     Real_Level,
-    Tutorial,
+    Tutorial_Intro_Game,
+    Tutorial_Rotate_Button,
 }
 
 public class EnvironmentManager : MonoBehaviour
@@ -19,4 +20,13 @@ public class EnvironmentManager : MonoBehaviour
         GameManager.Instance.EnvManager = this;
     }
 
+    public void ShowEndPointIntro()
+    {
+        mapSpawner.Objective.ShowEndPointIntro();
+    }
+
+    public void ShowPlayerIntro()
+    {
+        mapSpawner.Player.ShowPlayerIntro();
+    }
 }

@@ -17,6 +17,11 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler
         this.actionIcon.sprite = actionData.actionIcon;
     }
 
+    public bool CompareActionType(ActionType actionType)
+    {
+        return actionData.actionType == actionType;
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
         Debug.Log("Play " + actionData.actionType);

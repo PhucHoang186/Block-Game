@@ -14,10 +14,10 @@ public enum GameState
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] LevelConfig levelConfig;
 
     public static GameManager Instance;
     public GameState gameState;
+    private LevelConfig levelConfig;
     private bool isWinGame;
     private bool isLoseGame;
     public EnvironmentManager EnvManager { get; set; }
@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        levelConfig = GameDataManager.Instance.levelConfig;
         OnChangeState(GameState.LoadLevel);
     }
 
@@ -64,15 +65,29 @@ public class GameManager : MonoBehaviour
 
     public GameObject GetObjectiveInLevel()
     {
-        return EnvManager.mapSpawner.Objective;
+        return EnvManager.mapSpawner.Objective.gameObject;
+    }
+    public void ShowEndPointIntro()
+    {
+        EnvManager.ShowEndPointIntro();
+    }
+
+    public void ShowPlayerIntro()
+    {
+        EnvManager.ShowPlayerIntro();
     }
 
     public void CheckShowTutorial()
     {
-        if (EnvManager.levelType == LevelType.Tutorial)
+        if (EnvManager.levelType == LevelType.Tutorial_Intro_Game)
         {
             // show tutorial
-            TutorialController.Instance.OnChangeTutorialState(TutorialStep.Show_Objective);
+            TutorialController.Instance.OnChangeTutorialState(TutorialStep.Show_Intro);
+        }
+        else if(EnvManager.levelType == LevelType.Tutorial_Rotate_Button)
+        {
+            TutorialController.Instance.OnChangeTutorialState(TutorialStep.Show_Button_Tutorial);
+
         }
     }
 

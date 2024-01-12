@@ -11,6 +11,13 @@ public class LevelConfig : ScriptableObject
     public List<LevelData> levelDatas;
     public int currentLevel;
     public int maxLevel;
+    public ActionType firstTutorialType;
+    public ActionType secondTutorialType;
+
+    public ActionType GetLevelActionButtonType()
+    {
+        return currentLevel == 0 ? firstTutorialType : secondTutorialType;
+    }
 
     public LevelData GetCurrentLevel()
     {

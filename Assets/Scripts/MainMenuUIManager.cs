@@ -5,13 +5,14 @@ using UnityEngine.UI;
 
 public class MainMenuUIManager : MonoBehaviour
 {
-    [SerializeField] LevelConfig levelConfig;
     [SerializeField] Button playButton;
     [SerializeField] Button continueButton;
     [SerializeField] Button exitButton;
+    private LevelConfig levelConfig;
 
     private void Start()
     {
+        levelConfig = GameDataManager.Instance.levelConfig;
         TransitionManager.Instance.OnCallTransitionIn(false);
         playButton.onClick.AddListener(OnPlayButtonPress);
         continueButton.onClick.AddListener(OnContinueButtonPress);
@@ -28,7 +29,6 @@ public class MainMenuUIManager : MonoBehaviour
 
     public void OnPlayButtonPress()
     {
-        levelConfig.ResetLevel();
         LoadLevelSelectScene();
     }
 
@@ -49,6 +49,7 @@ public class MainMenuUIManager : MonoBehaviour
 
     private IEnumerator CorLoadLevelSelectScene()
     {
+        GameDataManager.Instance?.ResetSave();
         TransitionManager.Instance.OnCallTransitionIn(true);
         yield return new WaitForSeconds(1f);
         LoadSceneManager.Instance.LoadScene(SceneName.LEVEL_SELECT);

@@ -8,14 +8,14 @@ public class MapSpawner : MonoBehaviour
     [SerializeField] GameObject pathPrefab;
     [SerializeField] List<GameObject> offPathPrefabs;
     [SerializeField] PlayerCharacter playerPrefab;
-    [SerializeField] GameObject flagPrefab; // end point
+    [SerializeField] EndPoint flagPrefab; // end point
     [Space(10)]
     [Header("Settings")]
     [SerializeField] Transform startPoint;
     [SerializeField] Transform endPoint;
 
     public PlayerCharacter Player {get; set;}
-    public GameObject Objective {get; set;}
+    public EndPoint Objective {get; set;}
 
     private void Start()
     {

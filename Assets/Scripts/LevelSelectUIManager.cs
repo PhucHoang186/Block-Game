@@ -5,15 +5,19 @@ using UnityEngine.UI;
 
 public class LevelSelectUIManager : MonoBehaviour
 {
-    [SerializeField] LevelConfig levelConfig;
     [SerializeField] LevelButton levelButtonPrefab;
     [SerializeField] Transform content;
+    [SerializeField] LevelSelectTutorial levelSelectTutorial;
+    private LevelConfig levelConfig;
     private List<LevelButton> levelButtons;
 
     void Start()
     {
+        levelConfig = GameDataManager.Instance.levelConfig;
         TransitionManager.Instance.OnCallTransitionIn(false);
         GenerateLevelButtons();
+        if (levelConfig.maxLevel == 0)
+            levelSelectTutorial.ShowFTUE(levelButtons.Count - 1, content);
     }
 
     public void OnBackButtonPress()
@@ -24,13 +28,14 @@ public class LevelSelectUIManager : MonoBehaviour
     private void GenerateLevelButtons()
     {
         levelButtons = new();
-        for (int i = 0; i < levelConfig.levelDatas.Count; i++)
+        for (int i = levelConfig.levelDatas.Count - 1; i >= 0; i--)
         {
             var levelButton = Instantiate(levelButtonPrefab, content);
             levelButton.InitAction(LoadLevelScene);
             levelButton.Init(i + 1, i > levelConfig.maxLevel);
             levelButtons.Add(levelButton);
         }
+        levelButtons.Reverse();
     }
 
     void LoadLevelScene(LevelButton levelButton)

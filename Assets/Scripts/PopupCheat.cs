@@ -8,6 +8,6 @@ public class PopupCheat : MonoBehaviour
 
     public void ResetLevel()
     {
-        levelConfig.ResetLevel();
+        GameDataManager.Instance?.ResetSave();
     }
 }

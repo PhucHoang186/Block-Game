@@ -18,4 +18,6 @@ MonoBehaviour:
   - levelScene: Level2
   - levelScene: Level3
   currentLevel: 0
-  maxLevel: 2
+  maxLevel: 0
+  firstTutorialType: 2
+  secondTutorialType: 5

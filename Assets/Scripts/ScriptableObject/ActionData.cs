@@ -21,9 +21,4 @@ public class ActionData : ScriptableObject
     public ActionModifier actionModifier;
 }
 
-public interface IAction
-{
-    public void ExecuteAction(GameObject player);
-}
-
 

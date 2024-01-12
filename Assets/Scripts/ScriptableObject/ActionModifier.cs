@@ -8,3 +8,8 @@ public class ActionModifier : ScriptableObject, IAction
     {
     }
 }
+
+public interface IAction
+{
+    public void ExecuteAction(GameObject player);
+}

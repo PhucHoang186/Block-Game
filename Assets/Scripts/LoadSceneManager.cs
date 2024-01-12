@@ -25,7 +25,7 @@ public class LoadSceneManager : MonoBehaviour
 
     public void LoadScene(string sceneName, Action cb = null)
     {
-        
+
         LoadSceneAsync(sceneName, cb, LoadSceneMode.Single);
     }
 

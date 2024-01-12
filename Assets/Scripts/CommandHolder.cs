@@ -65,6 +65,18 @@ public class CommandHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         executeIndex = Mathf.Clamp(executeIndex, 0, UIDisplayList.Count);
     }
 
+    public void ResetCommand()
+    {
+        ResetCommands();
+        UnBlockInteract();
+    }
+
+    public void RunCommand()
+    {
+        ResetExecuteList();
+        BlockInteract();
+    }
+
     public void ResetExecuteList()
     {
         executeIndex = 0;
@@ -104,6 +116,11 @@ public class CommandHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         ScrollContent(1);
     }
 
+    public Vector3 GetTutorialCommandPosition()
+    {
+        return dummyIcons.Count > 0 ? dummyIcons[0].transform.position : Vector3.zero;
+    }
+
     public void ScrollContent(int direction)
     {
         scrollRect.horizontalNormalizedPosition += scrollSpeed * direction;
@@ -114,9 +131,8 @@ public class CommandHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         placeHolderObj.SetActive(isActive && placeHolderIcon.sprite != null);
         isAutoScroll = isActive;
         if (isActive)
-        {
             placeHolderObj.transform.SetAsLastSibling();
-        }
+
         foreach (var dummy in dummyIcons)
             dummy.transform.SetAsLastSibling();
     }
